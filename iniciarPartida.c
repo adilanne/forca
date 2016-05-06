@@ -38,8 +38,8 @@ void iniciarPartida(char dificuldade){
     }
   }
   else{
-    for (errou = 0; errou < QUANTIDADEFACIL; errou++){
-      mensagens(QUANTIDADEFACIL, errou);
+    for (errou = 0; errou < QUANTIDADEDIFICIL; errou++){
+      mensagens(QUANTIDADEDIFICIL, errou);
       errou = verificaLetra(errou, QUANTIDADEDIFICIL);
       errou = verificaPalavras(QUANTIDADEDIFICIL, errou);
 
@@ -78,7 +78,7 @@ void mensagens(int QUANTIDADE,int errou){
     printf(" %c",letrasAcertadas[i]);
   }
 
-  printf("\n\n%s\n\n", palavraEscolhida);
+  //printf("\n\n%s\n\n", palavraEscolhida);
 
   if (naoTinha == 0){
     printf("\n\nLetra '%c' já utilizada. Tente outra.\n", digitada[0]); //Verifica se letra tentada já foi tentada anteriormente
