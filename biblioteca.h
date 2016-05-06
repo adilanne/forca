@@ -5,6 +5,7 @@
 #include <locale.h>
 
 
+
 void flush();//Procedimento para tratar comparações em CHAR
 void iniciarPartida(char );
 char configDificuldade(char );

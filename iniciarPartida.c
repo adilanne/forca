@@ -11,7 +11,7 @@ int verificaPalavras(int, int); //Verifica se o vetor letrasAcertadas esta igual
 char facil[][20] = {"melhor", "grande", "claro", "azul", "vermelho","preto", "branco", "casa", "tempo", "felicidade", "bondade", "vida","caneta", "cavalo", "trem", "golpe", "cosmos"};
 char dificil[][20] = {"procrastinar", "prolegomenos", "vicissitudes", "pernostico", "oprobrio", "idiossincrasia", "elucubracoes", "chistoso", "acrimonia", "combustivel", "concurso", "protesto", "governo", "paquiderme", "tamandare"};
 char palavraEscolhida[20]; //Variavel utilizada para gurdar palavra da vez
-char letrasUtilizadas[25]=""; //Vetor que vai conter letras tentadas pelo usuário
+char letrasUtilizadas[25]= ""; //Vetor que vai conter letras tentadas pelo usuário
 char letrasAcertadas[21]="____________________"; //Vetor que vai conter letras acertadas pelo usuário
 char letrasAcertadasComp[21] = ""; //compara a palavra formada pelo usuário com o vetor palavraEscolhida
 char digitada[2]; //Vetor que vai conter letras que o usuário esta tentando
@@ -23,7 +23,7 @@ int acertou = 0;//Verifica se usuário acertou a letra. Caso sim, exibe a mensage
 
 
 void iniciarPartida(char dificuldade){
-
+	
   zeraLetras();
   palavraDaVez(dificuldade);
 
@@ -35,12 +35,11 @@ void iniciarPartida(char dificuldade){
       mensagens(QUANTIDADEFACIL, errou);
       errou = verificaLetra(errou, QUANTIDADEFACIL);
       errou = verificaPalavras(QUANTIDADEFACIL, errou);
-
     }
   }
   else{
-    for (errou = 0; errou < QUANTIDADEDIFICIL; errou++){
-      mensagens(QUANTIDADEDIFICIL, errou);
+    for (errou = 0; errou < QUANTIDADEFACIL; errou++){
+      mensagens(QUANTIDADEFACIL, errou);
       errou = verificaLetra(errou, QUANTIDADEDIFICIL);
       errou = verificaPalavras(QUANTIDADEDIFICIL, errou);
 
@@ -52,7 +51,7 @@ void iniciarPartida(char dificuldade){
 //Função ira selecionar palavra escolhida aleatoriamente
 void palavraDaVez(char dificuldade){
 
-  srand( (unsigned) time(NULL) );//criação da semente para o rand() com o tempo atual
+  srand((unsigned) time(NULL));//criação da semente para o rand() com o tempo atual
   if (dificuldade == 'F') 
     strcpy(palavraEscolhida,facil[rand()%17]);
 
@@ -79,31 +78,32 @@ void mensagens(int QUANTIDADE,int errou){
     printf(" %c",letrasAcertadas[i]);
   }
 
+  printf("\n\n%s\n\n", palavraEscolhida);
+
+  if (naoTinha == 0){
+    printf("\n\nLetra '%c' já utilizada. Tente outra.\n", digitada[0]); //Verifica se letra tentada já foi tentada anteriormente
+    naoTinha = 1;
+  }
+
+  if (acertou == 1){
+    printf("\n\nBoa! A letra '%c' existe na palavra :%c\n",digitada[0],')');
+    acertou = 0;
+  }
+
+  else if (acertou == 666) {
+    printf("\n\nLetra '%c' não existe na palavra :%c\n", digitada[0],'(');
+  }
+
   do {
-    //printf("\n\n%s\n\n", palavraEscolhida);
-
-
-    if (naoTinha == 0){
-      printf("\n\nLetra '%c' já utilizada. Tente outra.\n", digitada[0]); //Verifica se letra tentada já foi tentada anteriormente
-      naoTinha = 1;
-    }
-
-    if (acertou == 1){
-      printf("\n\nBoa! A letra '%c' existe na palavra :%c\n",digitada[0],')');
-      acertou = 0;
-    }
-
-    else if (acertou == 666) {
-      printf("\n\nLetra '%c' não existe na palavra :%c\n", digitada[0],'(');
-    }
-
+    
     printf("\n\nEntre uma letra (0 para sair). %d tentativas restantes.\n>", QUANTIDADE - errou);
-    scanf("%c", digitada);
-
+    scanf("%s", digitada);
+    
     //verifica se usuário colocou mais de uma letra
-    if (strlen(digitada) > 1)
-      printf("\n\nOi? Isso não é uma letra.\n");
-
+    if (strlen(digitada) > 1){
+    	printf("\n\nOi? Isso não é uma letra.\n");
+	  }
+	
     } while(strlen(digitada) > 1);
 
   flush();
@@ -113,22 +113,23 @@ void mensagens(int QUANTIDADE,int errou){
 void zeraLetras(){
   int j;
 
+  
   for (j=0;j < strlen(letrasUtilizadas);j++){
-    letrasUtilizadas[j]=' ';
+    letrasUtilizadas[j] = ' ';
   }
   for (j=0;j < strlen(letrasAcertadas);j++){
     letrasAcertadas[j]='_';
   }
 
-  idx = 0;
-  idxVerificao = 0;
-  naoTinha = 1;
-  acertou = 0;
+  for (j=0;j <= 20;j++){
+    letrasAcertadasComp[j] = 0;
+  }
 
+  idxVerificao = 0;
 }
 
 
-int verificaLetra(errou, QUANTIDADE){
+int verificaLetra(int errou, int QUANTIDADE){
 
   //verifica se letra esta dentro do vetor letrasUtilizadas. Caso sim, não continua processo de verificação
   int j;
@@ -171,16 +172,18 @@ int verificaLetra(errou, QUANTIDADE){
 }
 
 
-int verificaPalavras(QUANTIDADE, errou){
+int verificaPalavras(int QUANTIDADE, int errou){
 
   if (strcmp(letrasAcertadasComp, palavraEscolhida) == 0){
     printf("\nParabéns! Você ganhou. A palavra era '%s'.\nPressione enter para continuar...\n", palavraEscolhida);
     getchar();
+    acertou = 0;
     return QUANTIDADE;
   }
   if ((errou + 1) == QUANTIDADE){
     printf("Jogo encerrado. Você perdeu. A palavra era '%s'.\nPressione enter para continuar...\n", palavraEscolhida);
     getchar();
+    acertou = 0;
     return QUANTIDADE;
   }
   return errou;
